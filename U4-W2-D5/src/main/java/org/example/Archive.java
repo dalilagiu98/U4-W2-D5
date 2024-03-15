@@ -187,18 +187,30 @@ public class Archive {
     }
 
     //METHOD TO SEARCH BY ISBN:
-    public static Map<Long, String> searchByIsbn (long isbn) {
-        return catalogue.stream().filter(element -> element.getId() == isbn).collect(Collectors.toMap(BibliographicalElements::getId, BibliographicalElements::getTitle));
+    public static Map<Long, String> searchByIsbn (long isbn) throws NoSuchElementException {
+        Map<Long, String> result = catalogue.stream().filter(element -> element.getId() == isbn).collect(Collectors.toMap(BibliographicalElements::getId, BibliographicalElements::getTitle));
+        if (result.isEmpty()) {
+            throw new NoSuchElementException("ISBN not found!");
+        }
+        return result;
     }
 
     //METHOD SEARCH BY YEAR:
     public static List<BibliographicalElements> searchByYear (int year) {
-        return catalogue.stream().filter(element -> element.getPublicationYear() == year).collect(Collectors.toList());
+        List<BibliographicalElements> result = catalogue.stream().filter(element -> element.getPublicationYear() == year).collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new NoSuchElementException("Year not found");
+        }
+        return result;
     }
 
     //METHOD SEARCH BY AUTHOR:
-    public static List<BibliographicalElements> searchByAuthor (String author) {
-        return catalogue.stream().filter(element -> element instanceof Book).filter(element -> ((Book)element).getAuthor().equals(author)).collect(Collectors.toList());
+    public static List<BibliographicalElements> searchByAuthor (String author) throws NoSuchElementException{
+        List<BibliographicalElements> result = catalogue.stream().filter(element -> element instanceof Book).filter(element -> ((Book)element).getAuthor().equals(author)).collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new NoSuchElementException("Author not found");
+        }
+        return result;
     }
 
     //METHOD TO WRITE ON DISK:
