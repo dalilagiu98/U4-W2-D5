@@ -19,7 +19,7 @@ public class Archive {
     public static List<BibliographicalElements> catalogue = new ArrayList<>();
     public static void main(String[] args) {
 
-        //CREATION BOOKS:
+        //CREATION BOOKS AND MAGAZINE AND ADDING TO CATALOGUE:
         Supplier<Book> bookSupplier = () -> {
             Faker faker = new Faker(Locale.ITALY);
             Random random = new Random();
@@ -32,60 +32,148 @@ public class Archive {
             return new Magazine(faker.commerce().productName(), Math.abs(random.nextInt(10, 200)));
         };
 
-        for(int i = 0; i < 101; i++) {
+        for(int i = 0; i < 50; i++) {
             catalogue.add(bookSupplier.get());
+        }
+
+        for(int i = 0; i < 50; i++) {
             catalogue.add(magazineSupplier.get());
         }
 
-        catalogue.forEach(System.out::println);
 
+        //INITIALIZING SCANNER:
         Scanner scanner = new Scanner(System.in);
-//        System.out.println("Please for book insert title, number of page, author and genre");
-//        String title = scanner.nextLine();
-//        long pages = Long.parseLong(scanner.nextLine());
-//        String author = scanner.nextLine();
-//        String genre = scanner.nextLine();
-//        Book bookCreated = new Book(title, pages, author, genre);
-//        addElementCatalogue(bookCreated);
+        boolean exit = false;
 
-//        catalogue.forEach(System.out::println);
-//        System.out.println("Please enter a isbn to remove te element:");
-//        long isbn = Long.parseLong(scanner.nextLine());
-//        try{
-//            removeElementByIsbn(isbn);
-//        } catch (Exception e) {
-//            System.err.println("ISBN not found! Please enter another ISBN");
-//        }
+        System.out.println("---------------Hello! Welcome in EpiBooks!------------------");
+        while(!exit) {
+            System.out.println("Please, enter one of the characters corresponding to the following alternatives:");
+            System.out.println("A - Add element on our catalogue");
+            System.out.println("B - Remove an element from our catalogue");
+            System.out.println("C - Search by ISBN");
+            System.out.println("D - Search by year of publication");
+            System.out.println("E - Search by author");
+            System.out.println("F - Save your catalogue on your pc");
+            System.out.println("G - Update your catalogue on our database");
+            System.out.println("H - See our catalogue");
+            System.out.println("0 - Exit from archive");
 
-//        System.out.println("Please enter a ISBN to search a book:");
-//        long isbn = Long.parseLong(scanner.nextLine());
-//        searchByIsbn(isbn).forEach((id, title) -> {
-//            System.out.println("The ISBN is: " + id + " and the title is: " + title);
-//        });
+            String choice = scanner.nextLine().toUpperCase();
 
-//        System.out.println("Please enter a year to search a book:");
-//        int year = Integer.parseInt(scanner.nextLine());
-//        searchByYear(year).forEach((years) -> {
-//            System.out.println("Item found: " + years.getTitle());
-//        });
+            switch(choice) {
 
-        try {
-            saveToDisk();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+                case "A":
+                    System.out.println("What type of element you want to add? Enter B to insert a book or M to insert a magazine");
+                    String answer = scanner.nextLine().toUpperCase();
+
+                    if (answer.equals("B")) {
+                        System.out.println("For adding your book in our catalogue insert a title, number of pages, author and genre:");
+                        String title = scanner.nextLine();
+                        long pages = Long.parseLong(scanner.nextLine());
+                        String author = scanner.nextLine();
+                        String genre = scanner.nextLine();
+                        Book bookCreated = new Book(title, pages, author, genre);
+                        addElementCatalogue(bookCreated);
+                        System.out.println("Book added!");
+                        catalogue.forEach(System.out::println);
+                    } else if (answer.equals("M")) {
+                        System.out.println("For adding your magazine in our catalogue insert a title and number of pages:");
+                        String title = scanner.nextLine();
+                        long pages = Long.parseLong(scanner.nextLine());
+                        Magazine magazineCreated = new Magazine(title, pages);
+                        addElementCatalogue(magazineCreated);
+                        System.out.println("Magazine added!");
+                        catalogue.forEach(System.out::println);
+                    } else {
+                        System.err.println("Insert a valid character!");
+                    }
+                    break;
+
+                case "B":
+                    System.out.println("Please enter a ISBN to remove a element:");
+                    long isbn = Long.parseLong(scanner.nextLine());
+                    try {
+                        removeElementByIsbn(isbn);
+                        System.out.println("Item correctly removed");
+                        catalogue.forEach(System.out::println);
+                    } catch (Exception e) {
+                        System.err.println("ISBN not found! Please enter another ISBN!");
+                    }
+                    break;
+
+                case "C":
+                    System.out.println("Please enter a ISBN to search a book:");
+                    long isbn1 = Long.parseLong(scanner.nextLine());
+                    try {
+                        searchByIsbn(isbn1).forEach((id, title) -> {
+                            System.out.println("The ISBN is: " + id + " and the title is: " + title);
+                        });
+                    } catch (Exception e) {
+                        System.err.println("ISBN not found! Please enter another ISBN!");
+                    }
+                    break;
+
+                case "D":
+                    System.out.println("Please enter a year from 1455 to today to search books:");
+                    int year = Integer.parseInt(scanner.nextLine());
+                    try {
+                        searchByYear(year).forEach((years) -> {
+                            System.out.println("Item found: " + years.getTitle());
+                        });
+                    } catch (Exception e) {
+                        System.err.println("Year not found! Please enter another year!");
+                    }
+                    break;
+
+                case "E":
+                    System.out.println("Please enter a name of a author to search books:");
+                    String author = capitalizeFirstLetter(scanner.nextLine());
+                    try {
+                        searchByAuthor(author).forEach((authors) -> {
+                            System.out.println("title: " + authors.getTitle() + ", (" + authors.getPublicationYear() + ")");
+                        });
+                    } catch (Exception e) {
+                        System.err.println("Author not found! Please enter another author!");
+                    }
+                    break;
+
+                case "F":
+                    System.out.println("Saving catalogue on your computer...");
+                    try {
+                        saveToDisk();
+                        System.out.println("Catalogue saved!");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+
+                case "G":
+                    System.out.println("Printing your catalogue...");
+                    try {
+                        loadFromDisk().forEach(book -> {
+                            System.out.println(book);
+                        });
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    break;
+
+                case "H":
+                    catalogue.forEach(System.out::println);
+                    break;
+
+
+                case "0":
+
+                    exit = true;
+                    break;
+
+                default:
+                    System.err.println("Invalid choice! Please enter a valid option.");
+            }
         }
-        System.out.println("Please enter a author to search a book:");
-        String author = scanner.nextLine();
-        searchByAuthor(author).forEach((authors) -> {
-            System.out.println("Item found: " + authors.getTitle() + ", (" + authors.getPublicationYear() + ")" );
-        });
-        try {
-            loadFromDisk().forEach(book -> {
-                System.out.println(book);
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        System.out.println("Closing program... Goodbye!");
+        scanner.close();
     }
 
     //METHOD FOR ADDING AN ELEMENT IN CATALOGUE:
@@ -132,5 +220,13 @@ public class Archive {
         String fileString = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
         List<String> splitElementString = Arrays.asList(fileString);
         return splitElementString;
+    }
+
+    //METHOD CAPITALIZE FIRST LETTER OF A STRING:
+    public static String capitalizeFirstLetter(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }
