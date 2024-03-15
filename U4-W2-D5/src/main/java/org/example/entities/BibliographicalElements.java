@@ -24,5 +24,8 @@ public abstract class BibliographicalElements {
        this.pagesNumber = pagesNumber;
    }
 
-
+   //   METHODS:
+    public long getId() {
+        return id;
+    }
 }

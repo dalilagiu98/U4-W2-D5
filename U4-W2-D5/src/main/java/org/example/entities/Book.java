@@ -19,7 +19,7 @@ public class Book extends BibliographicalElements{
     public String toString() {
         return "BOOK:" +
                 "'" + title  + "'" +
-                " by " + author + ", ISBN :" + id +
+                " by " + author +", genre: " + genre + ", ISBN :" + id +
                 ", publication Year:" + publicationYear +
                 ", pages:" + pagesNumber +
                 ".";

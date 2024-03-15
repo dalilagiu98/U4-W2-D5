@@ -7,6 +7,7 @@ import org.example.entities.Magazine;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class Archive {
 
@@ -44,6 +45,14 @@ public class Archive {
         addElementCatalogue(bookCreated);
 
         catalogue.forEach(System.out::println);
+        System.out.println("Please enter a isbn to remove te element:");
+        long isbn = Long.parseLong(scanner.nextLine());
+        try{
+            removeElementByIsbn(isbn);
+        } catch (Exception e) {
+            System.err.println("ISBN not found! Please enter another ISBN");
+        }
+        catalogue.forEach(System.out::println);
 
 
     }
@@ -51,5 +60,9 @@ public class Archive {
     //METHODS FOR ADDING AN ELEMENT IN CATALOGUE:
     public static void addElementCatalogue (BibliographicalElements element) {
         catalogue.add(element);
+    }
+
+    public static void removeElementByIsbn (long isbn) {
+      catalogue =  catalogue.stream().filter(elements -> elements.getId() != isbn).collect(Collectors.toList());
     }
 }
