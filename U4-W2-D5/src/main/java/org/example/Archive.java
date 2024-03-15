@@ -79,7 +79,13 @@ public class Archive {
         searchByAuthor(author).forEach((authors) -> {
             System.out.println("Item found: " + authors.getTitle() + ", (" + authors.getPublicationYear() + ")" );
         });
-
+        try {
+            loadFromDisk().forEach(book -> {
+                System.out.println(book);
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //METHOD FOR ADDING AN ELEMENT IN CATALOGUE:
@@ -109,18 +115,6 @@ public class Archive {
 
     //METHOD TO WRITE ON DISK:
     public static void saveToDisk () throws IOException {
-        // Creating a string that represent the catalogue:
-//        StringBuilder stringBuilder = new StringBuilder();
-//        for (BibliographicalElements element : catalogue) {
-//            stringBuilder.append(element.toString()).append("\n");
-//        }
-//        String toWrite = stringBuilder.toString();
-//
-//        // Path of file
-//        String filePath = "src/catalogue.txt";
-//        FileUtils.writeStringToFile(new File(filePath), toWrite, "UTF-8");
-//        System.out.println("The catalogue is saved!");
-
         String toWrite = "";
 
         BibliographicalElements item;
@@ -130,5 +124,13 @@ public class Archive {
 
         File file = new File("src/catalogue.txt");
         FileUtils.writeStringToFile(file, toWrite + System.lineSeparator(), StandardCharsets.UTF_8);
+    }
+
+    //METHOD TO LOAD FROM DISK:
+    public static List<String> loadFromDisk() throws IOException {
+        File file = new File("src/catalogue.txt");
+        String fileString = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        List<String> splitElementString = Arrays.asList(fileString);
+        return splitElementString;
     }
 }
