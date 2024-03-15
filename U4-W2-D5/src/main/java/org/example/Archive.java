@@ -1,10 +1,14 @@
 package org.example;
 
 import com.github.javafaker.Faker;
+import org.apache.commons.io.FileUtils;
 import org.example.entities.BibliographicalElements;
 import org.example.entities.Book;
 import org.example.entities.Magazine;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -65,6 +69,11 @@ public class Archive {
 //            System.out.println("Item found: " + years.getTitle());
 //        });
 
+        try {
+            saveToDisk();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println("Please enter a author to search a book:");
         String author = scanner.nextLine();
         searchByAuthor(author).forEach((authors) -> {
@@ -96,5 +105,30 @@ public class Archive {
     //METHOD SEARCH BY AUTHOR:
     public static List<BibliographicalElements> searchByAuthor (String author) {
         return catalogue.stream().filter(element -> element instanceof Book).filter(element -> ((Book)element).getAuthor().equals(author)).collect(Collectors.toList());
+    }
+
+    //METHOD TO WRITE ON DISK:
+    public static void saveToDisk () throws IOException {
+        // Creating a string that represent the catalogue:
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for (BibliographicalElements element : catalogue) {
+//            stringBuilder.append(element.toString()).append("\n");
+//        }
+//        String toWrite = stringBuilder.toString();
+//
+//        // Path of file
+//        String filePath = "src/catalogue.txt";
+//        FileUtils.writeStringToFile(new File(filePath), toWrite, "UTF-8");
+//        System.out.println("The catalogue is saved!");
+
+        String toWrite = "";
+
+        BibliographicalElements item;
+        for(Iterator var1= catalogue.iterator(); var1.hasNext(); toWrite = toWrite + item.getTitle() + ", ISBN: " + item.getId() + '\n') {
+            item = (BibliographicalElements)var1.next();
+        }
+
+        File file = new File("src/catalogue.txt");
+        FileUtils.writeStringToFile(file, toWrite + System.lineSeparator(), StandardCharsets.UTF_8);
     }
 }
