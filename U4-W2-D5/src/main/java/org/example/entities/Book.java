@@ -12,4 +12,16 @@ public class Book extends BibliographicalElements{
         this.author = author;
         this.genre = genre;
     }
+
+    //METHODS:
+
+    @Override
+    public String toString() {
+        return "BOOK:" +
+                "'" + title  + "'" +
+                " by " + author + ", ISBN :" + id +
+                ", publication Year:" + publicationYear +
+                ", pages:" + pagesNumber +
+                ".";
+    }
 }

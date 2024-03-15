@@ -15,7 +15,7 @@ public abstract class BibliographicalElements {
 
    public BibliographicalElements (String title, long pagesNumber) {
        Random random = new Random();
-       this.id = random.nextLong();
+       this.id = Math.abs(random.nextLong());
        this.title = title;
        this.publicationYear = random.nextInt(1455, LocalDate.now().getYear()); //print a random number from 1455 (year of invention of printing) to actual year
        if(pagesNumber < 10){
