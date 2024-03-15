@@ -28,7 +28,7 @@ public class Archive {
             return new Magazine(faker.commerce().productName(), Math.abs(random.nextInt(10, 200)));
         };
 
-        for(int i = 0; i < 10; i++) {
+        for(int i = 0; i < 101; i++) {
             catalogue.add(bookSupplier.get());
             catalogue.add(magazineSupplier.get());
         }
@@ -53,13 +53,17 @@ public class Archive {
 //            System.err.println("ISBN not found! Please enter another ISBN");
 //        }
 
-        System.out.println("Please enter a ISBN to search a book:");
-        long isbn = Long.parseLong(scanner.nextLine());
-        searchByIsbn(isbn).forEach((id, title) -> {
-            System.out.println("The ISBN is: " + id + " and the title is: " + title);
+//        System.out.println("Please enter a ISBN to search a book:");
+//        long isbn = Long.parseLong(scanner.nextLine());
+//        searchByIsbn(isbn).forEach((id, title) -> {
+//            System.out.println("The ISBN is: " + id + " and the title is: " + title);
+//        });
+
+        System.out.println("Please enter a year to search a book:");
+        int year = Integer.parseInt(scanner.nextLine());
+        searchByYear(year).forEach((years) -> {
+            System.out.println("Item found: " + years.getTitle());
         });
-
-
 
     }
 
@@ -76,5 +80,10 @@ public class Archive {
     //METHOD TO SEARCH BY ISBN:
     public static Map<Long, String> searchByIsbn (long isbn) {
         return catalogue.stream().filter(element -> element.getId() == isbn).collect(Collectors.toMap(BibliographicalElements::getId, BibliographicalElements::getTitle));
+    }
+
+    //METHOD SEARCH BY YEAR:
+    public static List<BibliographicalElements> searchByYear (int year) {
+        return catalogue.stream().filter(element -> element.getPublicationYear() == year).collect(Collectors.toList());
     }
 }

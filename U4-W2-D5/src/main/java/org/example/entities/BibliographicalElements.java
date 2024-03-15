@@ -32,4 +32,8 @@ public abstract class BibliographicalElements {
     public String getTitle() {
         return title;
     }
+
+    public int getPublicationYear() {
+        return publicationYear;
+    }
 }
