@@ -14,7 +14,6 @@ public class Book extends BibliographicalElements{
     }
 
     //METHODS:
-
     @Override
     public String toString() {
         return "BOOK:" +
@@ -23,5 +22,9 @@ public class Book extends BibliographicalElements{
                 ", publication Year:" + publicationYear +
                 ", pages:" + pagesNumber +
                 ".";
+    }
+
+    public String getAuthor() {
+        return author;
     }
 }

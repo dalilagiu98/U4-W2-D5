@@ -59,10 +59,16 @@ public class Archive {
 //            System.out.println("The ISBN is: " + id + " and the title is: " + title);
 //        });
 
-        System.out.println("Please enter a year to search a book:");
-        int year = Integer.parseInt(scanner.nextLine());
-        searchByYear(year).forEach((years) -> {
-            System.out.println("Item found: " + years.getTitle());
+//        System.out.println("Please enter a year to search a book:");
+//        int year = Integer.parseInt(scanner.nextLine());
+//        searchByYear(year).forEach((years) -> {
+//            System.out.println("Item found: " + years.getTitle());
+//        });
+
+        System.out.println("Please enter a author to search a book:");
+        String author = scanner.nextLine();
+        searchByAuthor(author).forEach((authors) -> {
+            System.out.println("Item found: " + authors.getTitle() + ", (" + authors.getPublicationYear() + ")" );
         });
 
     }
@@ -85,5 +91,10 @@ public class Archive {
     //METHOD SEARCH BY YEAR:
     public static List<BibliographicalElements> searchByYear (int year) {
         return catalogue.stream().filter(element -> element.getPublicationYear() == year).collect(Collectors.toList());
+    }
+
+    //METHOD SEARCH BY AUTHOR:
+    public static List<BibliographicalElements> searchByAuthor (String author) {
+        return catalogue.stream().filter(element -> element instanceof Book).filter(element -> ((Book)element).getAuthor().equals(author)).collect(Collectors.toList());
     }
 }
